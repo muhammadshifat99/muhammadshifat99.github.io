@@ -1,1 +1,1636 @@
-# muhammadshifat99.github.io
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Certificate Maker</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Great+Vibes&family=Cinzel:wght@400;600&family=Dancing+Script:wght@400;700&family=Satisfy&family=Cormorant+Garamond:wght@400;600&family=Libre+Baskerville:wght@400;700&family=Montserrat:wght@400;600&family=Raleway:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1.1em;
+        }
+
+        .main-content {
+            display: grid;
+            grid-template-columns: 350px 1fr;
+            gap: 30px;
+            padding: 30px;
+        }
+
+        .sidebar {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            height: fit-content;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .form-group input, .form-group select {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus, .form-group select:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .file-input-wrapper {
+            position: relative;
+            overflow: hidden;
+            display: inline-block;
+            width: 100%;
+        }
+
+        .file-input-wrapper input[type=file] {
+            position: absolute;
+            left: -9999px;
+        }
+
+        .file-input-label {
+            display: block;
+            padding: 12px;
+            background: #667eea;
+            color: white;
+            text-align: center;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        .file-input-label:hover {
+            background: #5568d3;
+        }
+
+        .logo-preview {
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .logo-preview img {
+            max-width: 100px;
+            max-height: 100px;
+            border-radius: 8px;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 14px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-bottom: 10px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        .btn-secondary {
+            background: #28a745;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #218838;
+            transform: translateY(-2px);
+        }
+
+        .btn-warning {
+            background: #ffc107;
+            color: #333;
+        }
+
+        .btn-warning:hover {
+            background: #e0a800;
+            transform: translateY(-2px);
+        }
+
+        .ai-suggestion-box {
+            background: #f0e6ff;
+            border: 2px solid #9333ea;
+            border-radius: 10px;
+            padding: 15px;
+            margin: 15px 0;
+            display: none;
+        }
+
+        .ai-suggestion-box.active {
+            display: block;
+        }
+
+        .ai-suggestion-box h4 {
+            color: #9333ea;
+            margin-bottom: 10px;
+        }
+
+        .ai-suggestion-box p {
+            margin: 8px 0;
+            color: #555;
+            line-height: 1.5;
+        }
+
+        .ai-loading {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #9333ea;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin-left: 10px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .preview-area {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+
+        .preview-area::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .preview-area::-webkit-scrollbar-track {
+            background: #e0e0e0;
+            border-radius: 10px;
+        }
+
+        .preview-area::-webkit-scrollbar-thumb {
+            background: #667eea;
+            border-radius: 10px;
+        }
+
+        .preview-area::-webkit-scrollbar-thumb:hover {
+            background: #5568d3;
+        }
+
+        .certificate-preview {
+            background: white;
+            width: 100%;
+            max-width: 800px;
+            min-height: 700px;
+            height: auto;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .certificate-preview.size-small {
+            min-height: 500px;
+            max-width: 600px;
+        }
+
+        .certificate-preview.size-medium {
+            min-height: 700px;
+            max-width: 800px;
+        }
+
+        .certificate-preview.size-large {
+            min-height: 900px;
+            max-width: 1000px;
+        }
+
+        .certificate-preview.size-xlarge {
+            min-height: 1100px;
+            max-width: 1200px;
+        }
+
+        .template-selector {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .template-card {
+            border: 3px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+        }
+
+        .template-card:hover {
+            border-color: #667eea;
+            transform: translateY(-2px);
+        }
+
+        .template-card.active {
+            border-color: #667eea;
+            background: #f0f4ff;
+        }
+
+        .template-card img {
+            width: 100%;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 5px;
+        }
+
+        .template-card p {
+            margin-top: 8px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        /* Certificate Templates */
+        .cert-template {
+            width: 100%;
+            height: 100%;
+            min-height: 700px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            position: relative;
+            box-sizing: border-box;
+            transition: all 0.3s ease;
+        }
+
+        .size-small .cert-template {
+            min-height: 500px;
+        }
+
+        .size-medium .cert-template {
+            min-height: 700px;
+        }
+
+        .size-large .cert-template {
+            min-height: 900px;
+        }
+
+        .size-xlarge .cert-template {
+            min-height: 1100px;
+        }
+
+        .template-classic {
+            background: linear-gradient(135deg, #fff5e6 0%, #ffe6cc 100%);
+            border: 20px solid #d4af37;
+            padding: 60px 70px;
+        }
+
+        .template-modern {
+            background: linear-gradient(135deg, #e6f3ff 0%, #cce7ff 100%);
+            border: 15px solid #4a90e2;
+            padding: 55px 65px;
+        }
+
+        .template-elegant {
+            background: linear-gradient(135deg, #f0e6ff 0%, #e6ccff 100%);
+            border: 20px solid #8b5cf6;
+            padding: 60px 70px;
+        }
+
+        .cert-content {
+            max-width: 100%;
+            width: 100%;
+            padding: 20px;
+            overflow: visible;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .cert-logo {
+            width: 80px;
+            height: 80px;
+            object-fit: contain;
+            margin-bottom: 15px;
+            position: relative;
+            z-index: 3;
+            display: block;
+        }
+
+        .size-small .cert-logo {
+            width: 60px;
+            height: 60px;
+        }
+
+        .size-medium .cert-logo {
+            width: 80px;
+            height: 80px;
+        }
+
+        .size-large .cert-logo {
+            width: 100px;
+            height: 100px;
+        }
+
+        .size-xlarge .cert-logo {
+            width: 120px;
+            height: 120px;
+        }
+
+        .cert-title {
+            font-size: 42px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            color: #333;
+            word-wrap: break-word;
+            font-family: 'Cinzel', serif;
+        }
+
+        .cert-subtitle {
+            font-size: 18px;
+            margin-bottom: 30px;
+            color: #666;
+        }
+
+        .cert-name {
+            font-size: 36px;
+            font-weight: bold;
+            color: #333;
+            margin: 25px 0;
+            font-family: 'Brush Script MT', cursive;
+            word-wrap: break-word;
+            max-width: 90%;
+        }
+
+        .cert-achievement {
+            font-size: 22px;
+            font-weight: 600;
+            color: #555;
+            margin: 20px 0;
+            word-wrap: break-word;
+            max-width: 90%;
+            font-style: italic;
+        }
+
+        .cert-text {
+            font-size: 16px;
+            margin: 15px 0;
+            color: #555;
+        }
+
+        .cert-authority {
+            font-size: 20px;
+            font-weight: 600;
+            margin-top: 30px;
+            color: #333;
+            word-wrap: break-word;
+            max-width: 90%;
+        }
+
+        .cert-date {
+            font-size: 14px;
+            color: #666;
+            margin-top: 15px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .modal-content h2 {
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        .close-modal {
+            float: right;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        @media (max-width: 1200px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+
+            .certificate-preview {
+                width: 100%;
+                height: auto;
+                aspect-ratio: 4/3;
+            }
+
+            .sidebar {
+                max-width: 100%;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+            }
+
+            .container {
+                border-radius: 15px;
+            }
+
+            .header {
+                padding: 20px 15px;
+            }
+
+            .header h1 {
+                font-size: 1.8em;
+            }
+
+            .header p {
+                font-size: 0.95em;
+            }
+
+            .main-content {
+                grid-template-columns: 1fr;
+                gap: 20px;
+                padding: 20px 15px;
+            }
+
+            .sidebar {
+                padding: 20px;
+            }
+
+            .preview-area {
+                padding: 20px 15px;
+            }
+
+            .certificate-preview {
+                width: 100%;
+                height: auto;
+                min-height: 400px;
+            }
+
+            .cert-template {
+                min-height: 400px;
+                padding: 40px 30px !important;
+            }
+
+            .cert-title {
+                font-size: 28px !important;
+            }
+
+            .cert-subtitle {
+                font-size: 14px !important;
+            }
+
+            .cert-name {
+                font-size: 24px !important;
+            }
+
+            .cert-achievement {
+                font-size: 17px !important;
+            }
+
+            .cert-text {
+                font-size: 13px !important;
+            }
+
+            .cert-authority {
+                font-size: 16px !important;
+            }
+
+            .cert-date {
+                font-size: 12px !important;
+            }
+
+            .cert-logo {
+                width: 50px !important;
+                height: 50px !important;
+            }
+
+            .modal-content {
+                padding: 25px 20px;
+                max-width: 95%;
+                max-height: 85vh;
+            }
+
+            .modal-content h2 {
+                font-size: 1.5em;
+            }
+
+            .form-group label {
+                font-size: 14px;
+            }
+
+            .form-group input,
+            .form-group select {
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .btn {
+                padding: 12px;
+                font-size: 14px;
+            }
+
+            .template-card {
+                padding: 8px;
+            }
+
+            .template-card p {
+                font-size: 12px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .header h1 {
+                font-size: 1.5em;
+            }
+
+            .header p {
+                font-size: 0.9em;
+            }
+
+            .main-content {
+                padding: 15px 10px;
+            }
+
+            .sidebar {
+                padding: 15px;
+            }
+
+            .preview-area {
+                padding: 15px 10px;
+            }
+
+            .preview-area h2 {
+                font-size: 1.2em;
+                margin-bottom: 15px;
+            }
+
+            .certificate-preview {
+                min-height: 300px;
+            }
+
+            .cert-template {
+                min-height: 300px;
+                padding: 25px 15px !important;
+            }
+
+            .cert-title {
+                font-size: 24px !important;
+                margin-bottom: 15px !important;
+            }
+
+            .cert-subtitle {
+                font-size: 12px !important;
+                margin-bottom: 20px !important;
+            }
+
+            .cert-name {
+                font-size: 20px !important;
+                margin: 20px 0 !important;
+            }
+
+            .cert-achievement {
+                font-size: 15px !important;
+                margin: 15px 0 !important;
+            }
+
+            .cert-text {
+                font-size: 12px !important;
+                margin: 12px 0 !important;
+            }
+
+            .cert-authority {
+                font-size: 15px !important;
+                margin-top: 20px !important;
+            }
+
+            .cert-date {
+                font-size: 11px !important;
+                margin-top: 12px !important;
+            }
+
+            .cert-logo {
+                width: 40px !important;
+                height: 40px !important;
+                margin-bottom: 10px !important;
+            }
+
+            .modal-content {
+                padding: 20px 15px;
+            }
+
+            .form-group {
+                margin-bottom: 15px;
+            }
+
+            .btn {
+                padding: 11px;
+                font-size: 13px;
+                margin-bottom: 8px;
+            }
+
+            .close-modal {
+                font-size: 24px;
+            }
+
+            #fontPreview {
+                font-size: 18px;
+                padding: 12px;
+            }
+        }
+
+        /* Landscape orientation for mobile */
+        @media (max-width: 768px) and (orientation: landscape) {
+            .certificate-preview {
+                max-height: 60vh;
+            }
+
+            .modal-content {
+                max-height: 80vh;
+            }
+        }
+
+        /* Touch-friendly buttons on mobile */
+        @media (hover: none) and (pointer: coarse) {
+            .btn {
+                min-height: 44px;
+            }
+
+            .file-input-label {
+                min-height: 44px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+            }
+
+            .template-card {
+                min-height: 120px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎓 Certificate Maker</h1>
+            <p>Create beautiful certificates in minutes</p>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="form-group">
+                    <label>Select Template</label>
+                    <select id="templateSelect">
+                        <option value="classic">Classic Gold</option>
+                        <option value="modern">Modern Blue</option>
+                        <option value="elegant">Elegant Purple</option>
+                    </select>
+                </div>
+
+                <div id="aiAchievementBox" class="ai-suggestion-box">
+                    <h4>✨ AI Suggestion</h4>
+                    <p id="aiAchievementText"></p>
+                </div>
+
+                <div class="form-group">
+                    <label>Certificate Size</label>
+                    <select id="certSize" onchange="updateCertificateSize()">
+                        <option value="small">Small (500px)</option>
+                        <option value="medium" selected>Medium (700px)</option>
+                        <option value="large">Large (900px)</option>
+                        <option value="xlarge">Extra Large (1100px)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Title Font ("CERTIFICATE")</label>
+                    <select id="titleFont" onchange="updateTitleFont()">
+                        <option value="'Cinzel', serif">Cinzel (Default)</option>
+                        <option value="'Playfair Display', serif">Playfair Display</option>
+                        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+                        <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Raleway', sans-serif">Raleway</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Georgia', serif">Georgia</option>
+                        <option value="'Great Vibes', cursive">Great Vibes</option>
+                        <option value="'Dancing Script', cursive">Dancing Script</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Candidate Name</label>
+                    <input type="text" id="candidateName" placeholder="Enter name">
+                </div>
+
+                <div class="form-group">
+                    <label>Name Font</label>
+                    <select id="nameFont" onchange="updateNameFont()">
+                        <option value="'Brush Script MT', cursive">Brush Script</option>
+                        <option value="'Great Vibes', cursive">Great Vibes</option>
+                        <option value="'Dancing Script', cursive">Dancing Script</option>
+                        <option value="'Satisfy', cursive">Satisfy</option>
+                        <option value="'Playfair Display', serif">Playfair Display</option>
+                        <option value="'Cinzel', serif">Cinzel</option>
+                        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+                        <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Raleway', sans-serif">Raleway</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Achievement/Course Name</label>
+                    <input type="text" id="achievementName" placeholder="e.g., Web Development Course">
+                    <button class="btn" onclick="aiSuggestAchievement()" style="margin-top: 8px; background: #9333ea; color: white; padding: 8px;">✨ AI Suggest Achievement</button>
+                </div>
+
+                <div class="form-group">
+                    <label>Achievement Font</label>
+                    <select id="achievementFont" onchange="updateAchievementFont()">
+                        <option value="'Georgia', serif">Georgia (Default)</option>
+                        <option value="'Playfair Display', serif">Playfair Display</option>
+                        <option value="'Cinzel', serif">Cinzel</option>
+                        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+                        <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Raleway', sans-serif">Raleway</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Arial', sans-serif">Arial</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Certificate Authority</label>
+                    <input type="text" id="authorityName" placeholder="Enter authority name">
+                </div>
+
+                <div class="form-group">
+                    <label>Authority Font</label>
+                    <select id="authorityFont" onchange="updateAuthorityFont()">
+                        <option value="'Segoe UI', sans-serif">Segoe UI (Default)</option>
+                        <option value="'Playfair Display', serif">Playfair Display</option>
+                        <option value="'Cinzel', serif">Cinzel</option>
+                        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+                        <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Raleway', sans-serif">Raleway</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Georgia', serif">Georgia</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Body Text Font</label>
+                    <select id="bodyFont" onchange="updateBodyFont()">
+                        <option value="'Segoe UI', sans-serif">Segoe UI (Default)</option>
+                        <option value="'Montserrat', sans-serif">Montserrat</option>
+                        <option value="'Raleway', sans-serif">Raleway</option>
+                        <option value="'Arial', sans-serif">Arial</option>
+                        <option value="'Georgia', serif">Georgia</option>
+                        <option value="'Times New Roman', serif">Times New Roman</option>
+                        <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Authority Logo</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="logoInput" accept="image/*">
+                        <label for="logoInput" class="file-input-label">Choose Logo</label>
+                    </div>
+                    <div class="logo-preview" id="logoPreview"></div>
+                </div>
+
+                <button class="btn btn-primary" onclick="openTemplateModal()">➕ Add New Template</button>
+                <button class="btn btn-primary" onclick="editCurrentTemplate()" style="background: #17a2b8;">✏️ Edit Current Template</button>
+                <button class="btn" onclick="aiDesignSuggestion()" style="background: #9333ea; color: white;">🤖 AI Design Suggestions</button>
+                
+                <div id="aiDesignBox" class="ai-suggestion-box">
+                    <h4>🤖 AI Design Recommendations</h4>
+                    <p id="aiDesignText"></p>
+                </div>
+            </div>
+
+            <div class="preview-area">
+                <h2 style="margin-bottom: 20px;">Certificate Preview</h2>
+                <div class="certificate-preview size-medium" id="certificatePreview">
+                    <div class="cert-template template-classic">
+                        <div class="cert-content">
+                            <img src="" alt="" class="cert-logo" id="certLogo" style="display: none;">
+                            <div class="cert-title" id="certTitle">CERTIFICATE</div>
+                            <div class="cert-subtitle">of Achievement</div>
+                            <div class="cert-text">This is to certify that</div>
+                            <div class="cert-name" id="certName">John Doe</div>
+                            <div class="cert-text reduced-margin">has successfully completed</div>
+                            <div class="cert-achievement" id="certAchievement">Web Development Course</div>
+                            <div class="cert-authority" id="certAuthority">Certificate Authority</div>
+                            <div class="cert-date" id="certDate"></div>
+                        </div>
+                    </div>
+                </div>
+                <div style="display: flex; gap: 15px; margin-top: 20px; flex-wrap: wrap; justify-content: center;">
+                    <button class="btn btn-secondary" onclick="downloadPDF()" style="width: auto; min-width: 200px;">📄 Download as PDF</button>
+                    <button class="btn btn-warning" onclick="downloadJPG()" style="width: auto; min-width: 200px;">🖼️ Download as JPG</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+            <div class="modal" id="templateModal">
+        <div class="modal-content">
+            <span class="close-modal" onclick="closeTemplateModal()">×</span>
+            <h2>Add New Template</h2>
+            <p style="margin-bottom: 20px; color: #666;">Create your custom certificate template with full control over design elements.</p>
+            
+            <div class="form-group">
+                <label>Template Name</label>
+                <input type="text" id="newTemplateName" placeholder="e.g., Vibrant Red">
+            </div>
+
+            <div class="form-group">
+                <label>Background Type</label>
+                <select id="bgType" onchange="toggleBackgroundOptions()">
+                    <option value="gradient">Gradient</option>
+                    <option value="solid">Solid Color</option>
+                    <option value="image">Background Image</option>
+                </select>
+            </div>
+
+            <div id="gradientOptions">
+                <div class="form-group">
+                    <label>Background Color 1 (Gradient Start)</label>
+                    <input type="color" id="bgColor1" value="#ffffff">
+                </div>
+
+                <div class="form-group">
+                    <label>Background Color 2 (Gradient End)</label>
+                    <input type="color" id="bgColor2" value="#f0f0f0">
+                </div>
+
+                <div class="form-group">
+                    <label>Gradient Direction</label>
+                    <select id="gradientDirection">
+                        <option value="135deg">Diagonal (↘)</option>
+                        <option value="90deg">Vertical (↓)</option>
+                        <option value="0deg">Horizontal (→)</option>
+                        <option value="180deg">Horizontal (←)</option>
+                        <option value="270deg">Vertical (↑)</option>
+                        <option value="45deg">Diagonal (↗)</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="solidOptions" style="display: none;">
+                <div class="form-group">
+                    <label>Background Color</label>
+                    <input type="color" id="solidColor" value="#ffffff">
+                </div>
+            </div>
+
+            <div id="imageOptions" style="display: none;">
+                <div class="form-group">
+                    <label>Background Image</label>
+                    <div class="file-input-wrapper">
+                        <input type="file" id="bgImageInput" accept="image/*">
+                        <label for="bgImageInput" class="file-input-label">Choose Background Image</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Image Opacity (%)</label>
+                    <input type="range" id="bgOpacity" min="0" max="100" value="30">
+                    <span id="opacityValue">30%</span>
+                </div>
+
+                <div class="form-group">
+                    <label>Overlay Color (optional)</label>
+                    <input type="color" id="overlayColor" value="#ffffff">
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Border Style</label>
+                <select id="borderStyle">
+                    <option value="solid">Solid</option>
+                    <option value="double">Double</option>
+                    <option value="dashed">Dashed</option>
+                    <option value="dotted">Dotted</option>
+                    <option value="none">No Border</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label>Border Color</label>
+                <input type="color" id="borderColor" value="#d4af37">
+            </div>
+
+            <div class="form-group">
+                <label>Border Width (px)</label>
+                <input type="number" id="borderWidth" value="20" min="0" max="50">
+            </div>
+
+            <div class="form-group">
+                <label>Text Color</label>
+                <input type="color" id="textColor" value="#333333">
+            </div>
+
+            <div class="form-group">
+                <label>Font Family</label>
+                <select id="fontFamily" onchange="updateFontPreview()">
+                    <option value="'Segoe UI', Tahoma, Geneva, Verdana, sans-serif">Segoe UI</option>
+                    <option value="'Playfair Display', serif">Playfair Display</option>
+                    <option value="'Cinzel', serif">Cinzel</option>
+                    <option value="'Cormorant Garamond', serif">Cormorant Garamond</option>
+                    <option value="'Libre Baskerville', serif">Libre Baskerville</option>
+                    <option value="'Montserrat', sans-serif">Montserrat</option>
+                    <option value="'Raleway', sans-serif">Raleway</option>
+                    <option value="'Times New Roman', Times, serif">Times New Roman</option>
+                    <option value="Georgia, serif">Georgia</option>
+                    <option value="'Arial', sans-serif">Arial</option>
+                    <option value="'Courier New', monospace">Courier New</option>
+                    <option value="'Great Vibes', cursive">Great Vibes</option>
+                    <option value="'Dancing Script', cursive">Dancing Script</option>
+                    <option value="'Satisfy', cursive">Satisfy</option>
+                </select>
+                <div id="fontPreview" style="margin-top: 10px; padding: 15px; background: #f8f9fa; border-radius: 8px; font-size: 24px; text-align: center; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+                    Sample Certificate Text
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Certificate Padding (px)</label>
+                <input type="number" id="certPadding" value="50" min="20" max="100">
+            </div>
+
+            <button class="btn btn-primary" onclick="addNewTemplate()">Create Template</button>
+            <p style="margin-top: 15px; font-size: 14px; color: #666;"><strong>Note:</strong> Custom templates will be saved in your browser and available for this session.</p>
+        </div>
+    </div>
+
+    <script>
+        let logoData = null;
+        let bgImageData = null;
+        let isEditMode = false;
+        let editingTemplateKey = null;
+        const templates = {
+            classic: 'template-classic',
+            modern: 'template-modern',
+            elegant: 'template-elegant'
+        };
+        
+        // Store template configurations
+        const templateConfigs = {
+            classic: {
+                name: 'Classic Gold',
+                bgType: 'gradient',
+                bgColor1: '#fff5e6',
+                bgColor2: '#ffe6cc',
+                gradientDirection: '135deg',
+                borderStyle: 'solid',
+                borderColor: '#d4af37',
+                borderWidth: 20,
+                textColor: '#333333',
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                padding: 60
+            },
+            modern: {
+                name: 'Modern Blue',
+                bgType: 'gradient',
+                bgColor1: '#e6f3ff',
+                bgColor2: '#cce7ff',
+                gradientDirection: '135deg',
+                borderStyle: 'solid',
+                borderColor: '#4a90e2',
+                borderWidth: 15,
+                textColor: '#333333',
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                padding: 55
+            },
+            elegant: {
+                name: 'Elegant Purple',
+                bgType: 'gradient',
+                bgColor1: '#f0e6ff',
+                bgColor2: '#e6ccff',
+                gradientDirection: '135deg',
+                borderStyle: 'solid',
+                borderColor: '#8b5cf6',
+                borderWidth: 20,
+                textColor: '#333333',
+                fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
+                padding: 60
+            }
+        };
+
+        // Set current date
+        document.getElementById('certDate').textContent = new Date().toLocaleDateString('en-US', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric'
+        });
+
+        // Template selector
+        document.getElementById('templateSelect').addEventListener('change', function() {
+            const template = this.value;
+            const certTemplate = document.querySelector('.cert-template');
+            certTemplate.className = 'cert-template ' + templates[template];
+        });
+
+        // Candidate name input
+        document.getElementById('candidateName').addEventListener('input', function() {
+            document.getElementById('certName').textContent = this.value || 'John Doe';
+        });
+
+        // Achievement name input
+        document.getElementById('achievementName').addEventListener('input', function() {
+            document.getElementById('certAchievement').textContent = this.value || 'Web Development Course';
+        });
+
+        // Authority name input
+        document.getElementById('authorityName').addEventListener('input', function() {
+            document.getElementById('certAuthority').textContent = this.value || 'Certificate Authority';
+        });
+
+        // Font update functions
+        function updateTitleFont() {
+            const font = document.getElementById('titleFont').value;
+            document.getElementById('certTitle').style.fontFamily = font;
+        }
+
+        function updateCertificateSize() {
+            const size = document.getElementById('certSize').value;
+            const preview = document.getElementById('certificatePreview');
+            
+            // Remove all size classes
+            preview.classList.remove('size-small', 'size-medium', 'size-large', 'size-xlarge');
+            
+            // Add selected size class
+            preview.classList.add('size-' + size);
+        }
+
+        function updateNameFont() {
+            const font = document.getElementById('nameFont').value;
+            document.getElementById('certName').style.fontFamily = font;
+        }
+
+        function updateAchievementFont() {
+            const font = document.getElementById('achievementFont').value;
+            document.getElementById('certAchievement').style.fontFamily = font;
+        }
+
+        function updateAuthorityFont() {
+            const font = document.getElementById('authorityFont').value;
+            document.getElementById('certAuthority').style.fontFamily = font;
+        }
+
+        function updateBodyFont() {
+            const font = document.getElementById('bodyFont').value;
+            const elements = document.querySelectorAll('.cert-text, .cert-subtitle, .cert-date');
+            elements.forEach(el => el.style.fontFamily = font);
+        }
+
+        // Logo upload
+        document.getElementById('logoInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    logoData = e.target.result;
+                    const preview = document.getElementById('logoPreview');
+                    preview.innerHTML = '<img src="' + logoData + '" alt="Logo">';
+                    
+                    const certLogo = document.getElementById('certLogo');
+                    certLogo.src = logoData;
+                    certLogo.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Background image upload
+        document.getElementById('bgImageInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (file) {
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    bgImageData = e.target.result;
+                };
+                reader.readAsDataURL(file);
+            }
+        });
+
+        // Opacity slider
+        document.getElementById('bgOpacity').addEventListener('input', function() {
+            document.getElementById('opacityValue').textContent = this.value + '%';
+        });
+
+        // Toggle background options
+        function toggleBackgroundOptions() {
+            const bgType = document.getElementById('bgType').value;
+            document.getElementById('gradientOptions').style.display = bgType === 'gradient' ? 'block' : 'none';
+            document.getElementById('solidOptions').style.display = bgType === 'solid' ? 'block' : 'none';
+            document.getElementById('imageOptions').style.display = bgType === 'image' ? 'block' : 'none';
+        }
+
+        // Update font preview
+        function updateFontPreview() {
+            const fontFamily = document.getElementById('fontFamily').value;
+            const preview = document.getElementById('fontPreview');
+            preview.style.fontFamily = fontFamily;
+        }
+
+        // Download as PDF
+        async function downloadPDF() {
+            const { jsPDF } = window.jspdf;
+            const certificate = document.getElementById('certificatePreview');
+            
+            const canvas = await html2canvas(certificate, {
+                scale: 2,
+                useCORS: true,
+                logging: false
+            });
+            
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF({
+                orientation: 'landscape',
+                unit: 'px',
+                format: [canvas.width, canvas.height]
+            });
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, canvas.width, canvas.height);
+            pdf.save('certificate.pdf');
+        }
+
+        // Download as JPG
+        async function downloadJPG() {
+            const certificate = document.getElementById('certificatePreview');
+            
+            const canvas = await html2canvas(certificate, {
+                scale: 2,
+                useCORS: true,
+                logging: false,
+                backgroundColor: '#ffffff'
+            });
+            
+            canvas.toBlob(function(blob) {
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'certificate.jpg';
+                a.click();
+                URL.revokeObjectURL(url);
+            }, 'image/jpeg', 1.0);
+        }
+
+        // Modal functions
+        function openTemplateModal() {
+            isEditMode = false;
+            editingTemplateKey = null;
+            document.querySelector('.modal-content h2').textContent = 'Add New Template';
+            document.getElementById('newTemplateName').value = '';
+            document.getElementById('bgType').value = 'gradient';
+            document.getElementById('bgColor1').value = '#ffffff';
+            document.getElementById('bgColor2').value = '#f0f0f0';
+            document.getElementById('gradientDirection').value = '135deg';
+            document.getElementById('solidColor').value = '#ffffff';
+            document.getElementById('borderStyle').value = 'solid';
+            document.getElementById('borderColor').value = '#d4af37';
+            document.getElementById('borderWidth').value = '20';
+            document.getElementById('textColor').value = '#333333';
+            document.getElementById('fontFamily').value = "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif";
+            document.getElementById('certPadding').value = '50';
+            bgImageData = null;
+            toggleBackgroundOptions();
+            updateFontPreview();
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        function editCurrentTemplate() {
+            const currentTemplate = document.getElementById('templateSelect').value;
+            const config = templateConfigs[currentTemplate];
+            
+            if (!config) {
+                alert('Cannot edit this template. It may have been created in this session.');
+                return;
+            }
+            
+            isEditMode = true;
+            editingTemplateKey = currentTemplate;
+            
+            document.querySelector('.modal-content h2').textContent = 'Edit Template: ' + config.name;
+            document.getElementById('newTemplateName').value = config.name;
+            document.getElementById('bgType').value = config.bgType;
+            document.getElementById('bgColor1').value = config.bgColor1 || '#ffffff';
+            document.getElementById('bgColor2').value = config.bgColor2 || '#f0f0f0';
+            document.getElementById('gradientDirection').value = config.gradientDirection || '135deg';
+            document.getElementById('solidColor').value = config.solidColor || '#ffffff';
+            document.getElementById('borderStyle').value = config.borderStyle;
+            document.getElementById('borderColor').value = config.borderColor;
+            document.getElementById('borderWidth').value = config.borderWidth;
+            document.getElementById('textColor').value = config.textColor;
+            document.getElementById('fontFamily').value = config.fontFamily;
+            document.getElementById('certPadding').value = config.padding;
+            
+            toggleBackgroundOptions();
+            updateFontPreview();
+            document.getElementById('templateModal').classList.add('active');
+        }
+
+        function closeTemplateModal() {
+            document.getElementById('templateModal').classList.remove('active');
+            isEditMode = false;
+            editingTemplateKey = null;
+        }
+
+        function addNewTemplate() {
+            const name = document.getElementById('newTemplateName').value;
+            const bgType = document.getElementById('bgType').value;
+            const borderStyle = document.getElementById('borderStyle').value;
+            const borderColor = document.getElementById('borderColor').value;
+            const borderWidth = document.getElementById('borderWidth').value;
+            const textColor = document.getElementById('textColor').value;
+            const fontFamily = document.getElementById('fontFamily').value;
+            const padding = document.getElementById('certPadding').value;
+
+            if (!name) {
+                alert('Please enter a template name');
+                return;
+            }
+
+            let templateKey;
+            if (isEditMode && editingTemplateKey) {
+                templateKey = editingTemplateKey;
+            } else {
+                templateKey = name.toLowerCase().replace(/\s+/g, '-');
+            }
+            
+            let backgroundStyle = '';
+            
+            if (bgType === 'gradient') {
+                const bgColor1 = document.getElementById('bgColor1').value;
+                const bgColor2 = document.getElementById('bgColor2').value;
+                const direction = document.getElementById('gradientDirection').value;
+                backgroundStyle = `background: linear-gradient(${direction}, ${bgColor1} 0%, ${bgColor2} 100%);`;
+                
+                // Store config
+                templateConfigs[templateKey] = {
+                    name: name,
+                    bgType: bgType,
+                    bgColor1: bgColor1,
+                    bgColor2: bgColor2,
+                    gradientDirection: direction,
+                    borderStyle: borderStyle,
+                    borderColor: borderColor,
+                    borderWidth: parseInt(borderWidth),
+                    textColor: textColor,
+                    fontFamily: fontFamily,
+                    padding: parseInt(padding)
+                };
+            } else if (bgType === 'solid') {
+                const solidColor = document.getElementById('solidColor').value;
+                backgroundStyle = `background: ${solidColor};`;
+                
+                templateConfigs[templateKey] = {
+                    name: name,
+                    bgType: bgType,
+                    solidColor: solidColor,
+                    borderStyle: borderStyle,
+                    borderColor: borderColor,
+                    borderWidth: parseInt(borderWidth),
+                    textColor: textColor,
+                    fontFamily: fontFamily,
+                    padding: parseInt(padding)
+                };
+            } else if (bgType === 'image') {
+                if (!bgImageData) {
+                    alert('Please select a background image');
+                    return;
+                }
+                const opacity = document.getElementById('bgOpacity').value / 100;
+                const overlayColor = document.getElementById('overlayColor').value;
+                backgroundStyle = `
+                    background-image: url('${bgImageData}');
+                    background-size: cover;
+                    background-position: center;
+                `;
+                
+                templateConfigs[templateKey] = {
+                    name: name,
+                    bgType: bgType,
+                    bgImage: bgImageData,
+                    bgOpacity: parseInt(document.getElementById('bgOpacity').value),
+                    overlayColor: overlayColor,
+                    borderStyle: borderStyle,
+                    borderColor: borderColor,
+                    borderWidth: parseInt(borderWidth),
+                    textColor: textColor,
+                    fontFamily: fontFamily,
+                    padding: parseInt(padding)
+                };
+            }
+
+            // Remove old style if editing
+            if (isEditMode) {
+                const oldStyles = document.querySelectorAll(`style[data-template="${templateKey}"]`);
+                oldStyles.forEach(style => style.remove());
+            }
+
+            // Create dynamic style
+            const style = document.createElement('style');
+            style.setAttribute('data-template', templateKey);
+            
+            let overlayStyles = '';
+            if (bgType === 'image') {
+                const opacity = document.getElementById('bgOpacity').value / 100;
+                const overlayColor = document.getElementById('overlayColor').value;
+                overlayStyles = `
+                .template-${templateKey}::before {
+                    content: '';
+                    position: absolute;
+                    top: 0;
+                    left: 0;
+                    right: 0;
+                    bottom: 0;
+                    background: ${overlayColor};
+                    opacity: ${1 - opacity};
+                    pointer-events: none;
+                    z-index: 1;
+                }
+                `;
+            }
+            
+            style.textContent = `
+                .template-${templateKey} {
+                    ${backgroundStyle}
+                    border: ${borderWidth}px ${borderStyle} ${borderColor};
+                    padding: ${padding}px;
+                    font-family: ${fontFamily};
+                    box-sizing: border-box;
+                    position: relative;
+                }
+                ${overlayStyles}
+                .template-${templateKey} .cert-content {
+                    max-width: 100%;
+                    width: 100%;
+                    padding: 20px;
+                    overflow: visible;
+                    display: flex;
+                    flex-direction: column;
+                    align-items: center;
+                    justify-content: center;
+                    position: relative;
+                    z-index: 2;
+                }
+                .template-${templateKey} .cert-title,
+                .template-${templateKey} .cert-name,
+                .template-${templateKey} .cert-text,
+                .template-${templateKey} .cert-subtitle,
+                .template-${templateKey} .cert-achievement,
+                .template-${templateKey} .cert-authority,
+                .template-${templateKey} .cert-date {
+                    color: ${textColor};
+                    position: relative;
+                    z-index: 2;
+                }
+                .template-${templateKey} .cert-logo {
+                    position: relative;
+                    z-index: 3;
+                    display: block;
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Add to templates object
+            templates[templateKey] = 'template-' + templateKey;
+
+            // Update or add to select dropdown
+            const select = document.getElementById('templateSelect');
+            let option = select.querySelector(`option[value="${templateKey}"]`);
+            
+            if (option) {
+                // Update existing option
+                option.textContent = name;
+            } else {
+                // Add new option
+                option = document.createElement('option');
+                option.value = templateKey;
+                option.textContent = name;
+                select.appendChild(option);
+            }
+            
+            select.value = templateKey;
+
+            // Apply template
+            const certTemplate = document.querySelector('.cert-template');
+            certTemplate.className = 'cert-template template-' + templateKey;
+
+            closeTemplateModal();
+            
+            if (isEditMode) {
+                alert('Template "' + name + '" updated successfully!');
+            } else {
+                alert('Template "' + name + '" created successfully!');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.getElementById('templateModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeTemplateModal();
+            }
+        });
+
+        // AI Functions
+        async function callClaudeAPI(prompt) {
+            try {
+                const response = await fetch("https://api.anthropic.com/v1/messages", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "x-api-key": "YOUR_API_KEY_HERE", // User needs to add their key
+                        "anthropic-version": "2023-06-01"
+                    },
+                    body: JSON.stringify({
+                        model: "claude-sonnet-4-20250514",
+                        max_tokens: 1000,
+                        messages: [{
+                            role: "user",
+                            content: prompt
+                        }]
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error('API call failed. Please add your Anthropic API key.');
+                }
+
+                const data = await response.json();
+                return data.content[0].text;
+            } catch (error) {
+                return "AI feature requires an API key. Get one free at: https://console.anthropic.com/";
+            }
+        }
+
+        async function aiSuggestAchievement() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.innerHTML = '✨ Thinking...<span class="ai-loading"></span>';
+            btn.disabled = true;
+
+            const candidateName = document.getElementById('candidateName').value || 'the candidate';
+            const authority = document.getElementById('authorityName').value || 'your organization';
+
+            const prompt = `Suggest 3 creative and professional achievement/course names for a certificate. Context: The certificate is from "${authority}" for "${candidateName}". 
+
+Provide only the 3 suggestions, one per line, without numbering or extra text. Make them concise (3-6 words each) and professional.`;
+
+            const suggestion = await callClaudeAPI(prompt);
+            
+            document.getElementById('aiAchievementText').textContent = suggestion;
+            document.getElementById('aiAchievementBox').classList.add('active');
+            
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+
+        async function aiDesignSuggestion() {
+            const btn = event.target;
+            const originalText = btn.textContent;
+            btn.innerHTML = '🤖 Analyzing...<span class="ai-loading"></span>';
+            btn.disabled = true;
+
+            const achievement = document.getElementById('achievementName').value || 'general achievement';
+            const template = document.getElementById('templateSelect').options[document.getElementById('templateSelect').selectedIndex].text;
+
+            const prompt = `As a certificate design expert, provide 3 specific design recommendations for a certificate. 
+
+Context:
+- Achievement: "${achievement}"
+- Current template: ${template}
+
+Provide practical suggestions about:
+1. Font pairing recommendations
+2. Color scheme suggestions
+3. Layout or style improvements
+
+Keep each suggestion to 1-2 sentences. Be specific and actionable.`;
+
+            const suggestion = await callClaudeAPI(prompt);
+            
+            document.getElementById('aiDesignText').textContent = suggestion;
+            document.getElementById('aiDesignBox').classList.add('active');
+            
+            btn.textContent = originalText;
+            btn.disabled = false;
+        }
+    </script>
+</body>
+</html>
