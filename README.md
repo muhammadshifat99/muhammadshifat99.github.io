@@ -1,1 +1,1 @@
-go to muhammadshifat99.github.io/certificate-genaretor.html
+go to https://muhammadshifat99.github.io/certificate-maker.html
